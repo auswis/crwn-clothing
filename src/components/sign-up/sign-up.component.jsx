@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
-import "./sign-up.styles.scss";
-
 import { auth, createUserProfileDocument } from "../../firebase/firebase.utils";
 
-class SignUp extends Component {
+import { SignUpContainer, SignUpTitle } from "./sign-up.styles";
+
+class SignUp extends React.Component {
   constructor() {
     super();
 
@@ -21,14 +21,13 @@ class SignUp extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
+
     const { displayName, email, password, confirmPassword } = this.state;
 
     if (password !== confirmPassword) {
-      alert("Password dont match!");
+      alert("passwords don't match");
       return;
     }
-
-    console.log(password);
 
     try {
       const { user } = await auth.createUserWithEmailAndPassword(
@@ -44,7 +43,9 @@ class SignUp extends Component {
         password: "",
         confirmPassword: "",
       });
-    } catch (err) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   handleChange = (event) => {
@@ -55,10 +56,9 @@ class SignUp extends Component {
 
   render() {
     const { displayName, email, password, confirmPassword } = this.state;
-
     return (
-      <div className="sign-up">
-        <h2 className="title">I do not have an account</h2>
+      <SignUpContainer>
+        <SignUpTitle>I do not have a account</SignUpTitle>
         <span>Sign up with your email and password</span>
         <form className="sign-up-form" onSubmit={this.handleSubmit}>
           <FormInput
@@ -66,39 +66,36 @@ class SignUp extends Component {
             name="displayName"
             value={displayName}
             onChange={this.handleChange}
-            label="displayName"
+            label="Display Name"
             required
           />
-
           <FormInput
             type="email"
             name="email"
             value={email}
             onChange={this.handleChange}
-            label="email"
+            label="Email"
             required
           />
-
           <FormInput
             type="password"
             name="password"
             value={password}
             onChange={this.handleChange}
-            label="password"
+            label="Password"
             required
           />
-
           <FormInput
             type="password"
             name="confirmPassword"
             value={confirmPassword}
             onChange={this.handleChange}
-            label="confirmPassword"
+            label="Confirm Password"
             required
           />
-          <CustomButton type="submit"> SIGN UP</CustomButton>
+          <CustomButton type="submit">SIGN UP</CustomButton>
         </form>
-      </div>
+      </SignUpContainer>
     );
   }
 }
